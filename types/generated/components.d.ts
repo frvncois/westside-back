@@ -1,0 +1,70 @@
+import type { Schema, Struct } from '@strapi/strapi';
+
+export interface InfoOffice extends Struct.ComponentSchema {
+  collectionName: 'components_info_offices';
+  info: {
+    description: 'Office contact details';
+    displayName: 'Office';
+    icon: 'briefcase';
+  };
+  attributes: {
+    address: Schema.Attribute.Text;
+    email: Schema.Attribute.Email;
+    phone: Schema.Attribute.String;
+  };
+}
+
+export interface InfoTeamMember extends Struct.ComponentSchema {
+  collectionName: 'components_info_team_members';
+  info: {
+    description: "A team member's contact details";
+    displayName: 'Team Member';
+    icon: 'user';
+  };
+  attributes: {
+    email: Schema.Attribute.Email;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+    phone: Schema.Attribute.String;
+    title: Schema.Attribute.String;
+  };
+}
+
+export interface RepertoryGalleryItem extends Struct.ComponentSchema {
+  collectionName: 'components_repertory_gallery_items';
+  info: {
+    description: 'A single gallery entry with its taxonomy';
+    displayName: 'Gallery Item';
+    icon: 'picture';
+  };
+  attributes: {
+    client: Schema.Attribute.String;
+    filter: Schema.Attribute.Relation<'oneToOne', 'api::category.category'>;
+    image: Schema.Attribute.Media<'images'>;
+    title: Schema.Attribute.String;
+    type: Schema.Attribute.Enumeration<['films', 'photography']>;
+  };
+}
+
+export interface SharedLink extends Struct.ComponentSchema {
+  collectionName: 'components_shared_links';
+  info: {
+    description: 'A titled hyperlink';
+    displayName: 'Link';
+    icon: 'link';
+  };
+  attributes: {
+    title: Schema.Attribute.String & Schema.Attribute.Required;
+    url: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
+declare module '@strapi/strapi' {
+  export namespace Public {
+    export interface ComponentSchemas {
+      'info.office': InfoOffice;
+      'info.team-member': InfoTeamMember;
+      'repertory.gallery-item': RepertoryGalleryItem;
+      'shared.link': SharedLink;
+    }
+  }
+}

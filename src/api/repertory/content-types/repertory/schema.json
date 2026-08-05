@@ -1,0 +1,43 @@
+{
+  "kind": "collectionType",
+  "collectionName": "repertories",
+  "info": {
+    "singularName": "repertory",
+    "pluralName": "repertories",
+    "displayName": "Repertory",
+    "description": "Directors and photographers roster"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "type": {
+      "type": "enumeration",
+      "enum": [
+        "director",
+        "photographer"
+      ]
+    },
+    "excerpt": {
+      "type": "text"
+    },
+    "information": {
+      "type": "text"
+    },
+    "links": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.link"
+    },
+    "gallery": {
+      "type": "component",
+      "repeatable": true,
+      "component": "repertory.gallery-item"
+    }
+  }
+}

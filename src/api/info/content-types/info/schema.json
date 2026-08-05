@@ -1,0 +1,44 @@
+{
+  "kind": "singleType",
+  "collectionName": "infos",
+  "info": {
+    "singularName": "info",
+    "pluralName": "infos",
+    "displayName": "Info",
+    "description": "Info page content"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "text": {
+      "type": "blocks"
+    },
+    "intro": {
+      "type": "text"
+    },
+    "office": {
+      "type": "component",
+      "repeatable": false,
+      "component": "info.office"
+    },
+    "team": {
+      "type": "component",
+      "repeatable": true,
+      "component": "info.team-member"
+    },
+    "links": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.link"
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
+    }
+  }
+}

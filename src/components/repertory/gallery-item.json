@@ -1,0 +1,37 @@
+{
+  "collectionName": "components_repertory_gallery_items",
+  "info": {
+    "displayName": "Gallery Item",
+    "icon": "picture",
+    "description": "A single gallery entry with its taxonomy"
+  },
+  "options": {},
+  "attributes": {
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "title": {
+      "type": "string"
+    },
+    "client": {
+      "type": "string"
+    },
+    "filter": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::category.category"
+    },
+    "type": {
+      "type": "enumeration",
+      "enum": [
+        "films",
+        "photography"
+      ]
+    }
+  }
+}
