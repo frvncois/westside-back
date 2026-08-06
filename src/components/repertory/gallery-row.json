@@ -1,0 +1,16 @@
+{
+  "collectionName": "components_repertory_gallery_rows",
+  "info": {
+    "displayName": "Gallery Row",
+    "icon": "grid",
+    "description": "A reusable accordion row grouping a set of gallery items"
+  },
+  "options": {},
+  "attributes": {
+    "items": {
+      "type": "component",
+      "repeatable": true,
+      "component": "repertory.gallery-item"
+    }
+  }
+}

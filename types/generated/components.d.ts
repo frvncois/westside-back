@@ -38,10 +38,22 @@ export interface RepertoryGalleryItem extends Struct.ComponentSchema {
   };
   attributes: {
     client: Schema.Attribute.String;
-    filter: Schema.Attribute.Relation<'oneToOne', 'api::category.category'>;
+    filter: Schema.Attribute.Relation<'oneToMany', 'api::category.category'>;
     image: Schema.Attribute.Media<'images'>;
     title: Schema.Attribute.String;
     type: Schema.Attribute.Enumeration<['films', 'photography']>;
+  };
+}
+
+export interface RepertoryGalleryRow extends Struct.ComponentSchema {
+  collectionName: 'components_repertory_gallery_rows';
+  info: {
+    description: 'A reusable accordion row grouping a set of gallery items';
+    displayName: 'Gallery Row';
+    icon: 'grid';
+  };
+  attributes: {
+    items: Schema.Attribute.Component<'repertory.gallery-item', true>;
   };
 }
 
@@ -64,6 +76,7 @@ declare module '@strapi/strapi' {
       'info.office': InfoOffice;
       'info.team-member': InfoTeamMember;
       'repertory.gallery-item': RepertoryGalleryItem;
+      'repertory.gallery-row': RepertoryGalleryRow;
       'shared.link': SharedLink;
     }
   }

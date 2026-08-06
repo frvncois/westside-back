@@ -1,0 +1,21 @@
+{
+  "kind": "collectionType",
+  "collectionName": "disciplines",
+  "info": {
+    "singularName": "discipline",
+    "pluralName": "disciplines",
+    "displayName": "Discipline",
+    "description": "Repertory roles (Director, Photographer)"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    }
+  }
+}

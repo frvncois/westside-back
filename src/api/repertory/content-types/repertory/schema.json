@@ -16,12 +16,10 @@
       "type": "string",
       "required": true
     },
-    "type": {
-      "type": "enumeration",
-      "enum": [
-        "director",
-        "photographer"
-      ]
+    "disciplines": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::discipline.discipline"
     },
     "excerpt": {
       "type": "text"
@@ -37,7 +35,7 @@
     "gallery": {
       "type": "component",
       "repeatable": true,
-      "component": "repertory.gallery-item"
+      "component": "repertory.gallery-row"
     }
   }
 }
