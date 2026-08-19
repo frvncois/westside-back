@@ -1,0 +1,31 @@
+{
+  "kind": "singleType",
+  "collectionName": "page_seos",
+  "info": {
+    "singularName": "page-seo",
+    "pluralName": "page-seos",
+    "displayName": "Page SEO",
+    "description": "SEO metadata for the listing pages that have no content type of their own (Work, Directors, Photographers)."
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "work": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.seo"
+    },
+    "directors": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.seo"
+    },
+    "photographers": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.seo"
+    }
+  }
+}

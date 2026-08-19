@@ -556,6 +556,7 @@ export interface ApiHeroHero extends Struct.SingleTypeSchema {
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::hero.hero'> &
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
+    seo: Schema.Attribute.Component<'shared.seo', false>;
     slides: Schema.Attribute.Component<'hero.slide', true>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -586,11 +587,43 @@ export interface ApiInfoInfo extends Struct.SingleTypeSchema {
       Schema.Attribute.Private;
     office: Schema.Attribute.Component<'info.office', false>;
     publishedAt: Schema.Attribute.DateTime;
+    seo: Schema.Attribute.Component<'shared.seo', false>;
     team: Schema.Attribute.Component<'info.team-member', true>;
     text: Schema.Attribute.Blocks;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+  };
+}
+
+export interface ApiPageSeoPageSeo extends Struct.SingleTypeSchema {
+  collectionName: 'page_seos';
+  info: {
+    description: 'SEO metadata for the listing pages that have no content type of their own (Work, Directors, Photographers).';
+    displayName: 'Page SEO';
+    pluralName: 'page-seos';
+    singularName: 'page-seo';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    directors: Schema.Attribute.Component<'shared.seo', false>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::page-seo.page-seo'
+    > &
+      Schema.Attribute.Private;
+    photographers: Schema.Attribute.Component<'shared.seo', false>;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    work: Schema.Attribute.Component<'shared.seo', false>;
   };
 }
 
@@ -617,6 +650,7 @@ export interface ApiPolicyPolicy extends Struct.SingleTypeSchema {
     > &
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
+    seo: Schema.Attribute.Component<'shared.seo', false>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -655,6 +689,7 @@ export interface ApiRepertoryRepertory extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     name: Schema.Attribute.String & Schema.Attribute.Required;
     publishedAt: Schema.Attribute.DateTime;
+    seo: Schema.Attribute.Component<'shared.seo', false>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1210,6 +1245,7 @@ declare module '@strapi/strapi' {
       'api::footer.footer': ApiFooterFooter;
       'api::hero.hero': ApiHeroHero;
       'api::info.info': ApiInfoInfo;
+      'api::page-seo.page-seo': ApiPageSeoPageSeo;
       'api::policy.policy': ApiPolicyPolicy;
       'api::repertory.repertory': ApiRepertoryRepertory;
       'api::service.service': ApiServiceService;

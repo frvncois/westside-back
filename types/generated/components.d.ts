@@ -86,6 +86,28 @@ export interface SharedLink extends Struct.ComponentSchema {
   };
 }
 
+export interface SharedSeo extends Struct.ComponentSchema {
+  collectionName: 'components_shared_seos';
+  info: {
+    description: 'Search-engine and social-sharing metadata for a page. All fields optional \u2014 the frontend falls back to sensible defaults when empty.';
+    displayName: 'SEO';
+    icon: 'search';
+  };
+  attributes: {
+    canonicalUrl: Schema.Attribute.String;
+    metaDescription: Schema.Attribute.Text &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 160;
+      }>;
+    metaTitle: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 60;
+      }>;
+    noIndex: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    ogImage: Schema.Attribute.Media<'images'>;
+  };
+}
+
 declare module '@strapi/strapi' {
   export namespace Public {
     export interface ComponentSchemas {
@@ -95,6 +117,7 @@ declare module '@strapi/strapi' {
       'repertory.gallery-item': RepertoryGalleryItem;
       'repertory.gallery-row': RepertoryGalleryRow;
       'shared.link': SharedLink;
+      'shared.seo': SharedSeo;
     }
   }
 }
