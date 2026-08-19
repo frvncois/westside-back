@@ -1,0 +1,25 @@
+{
+  "collectionName": "components_hero_slides",
+  "info": {
+    "displayName": "Slide",
+    "icon": "picture",
+    "description": "A hero slide: media paired with a repertory reference"
+  },
+  "options": {},
+  "attributes": {
+    "media": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images",
+        "videos"
+      ]
+    },
+    "repertory": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::repertory.repertory"
+    }
+  }
+}

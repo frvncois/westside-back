@@ -16,6 +16,15 @@
       "type": "string",
       "required": true
     },
+    "hero": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images",
+        "videos"
+      ]
+    },
     "disciplines": {
       "type": "relation",
       "relation": "manyToMany",

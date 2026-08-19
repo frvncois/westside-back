@@ -12,13 +12,10 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "video": {
-      "type": "media",
-      "multiple": false,
-      "required": false,
-      "allowedTypes": [
-        "videos"
-      ]
+    "slides": {
+      "type": "component",
+      "repeatable": true,
+      "component": "hero.slide"
     }
   }
 }
