@@ -1,5 +1,21 @@
 import type { Schema, Struct } from '@strapi/strapi';
 
+export interface HeroSlide extends Struct.ComponentSchema {
+  collectionName: 'components_hero_slides';
+  info: {
+    description: 'A hero slide: media paired with a repertory reference';
+    displayName: 'Slide';
+    icon: 'picture';
+  };
+  attributes: {
+    media: Schema.Attribute.Media<'images' | 'videos'>;
+    repertory: Schema.Attribute.Relation<
+      'oneToOne',
+      'api::repertory.repertory'
+    >;
+  };
+}
+
 export interface InfoOffice extends Struct.ComponentSchema {
   collectionName: 'components_info_offices';
   info: {
@@ -39,7 +55,7 @@ export interface RepertoryGalleryItem extends Struct.ComponentSchema {
   attributes: {
     client: Schema.Attribute.String;
     filter: Schema.Attribute.Relation<'oneToMany', 'api::category.category'>;
-    image: Schema.Attribute.Media<'images'>;
+    image: Schema.Attribute.Media<'images' | 'videos'>;
     title: Schema.Attribute.String;
     type: Schema.Attribute.Enumeration<['films', 'photography']>;
   };
@@ -73,6 +89,7 @@ export interface SharedLink extends Struct.ComponentSchema {
 declare module '@strapi/strapi' {
   export namespace Public {
     export interface ComponentSchemas {
+      'hero.slide': HeroSlide;
       'info.office': InfoOffice;
       'info.team-member': InfoTeamMember;
       'repertory.gallery-item': RepertoryGalleryItem;

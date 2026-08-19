@@ -556,10 +556,10 @@ export interface ApiHeroHero extends Struct.SingleTypeSchema {
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::hero.hero'> &
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
+    slides: Schema.Attribute.Component<'hero.slide', true>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    video: Schema.Attribute.Media<'videos'>;
   };
 }
 
@@ -644,6 +644,7 @@ export interface ApiRepertoryRepertory extends Struct.CollectionTypeSchema {
     >;
     excerpt: Schema.Attribute.Text;
     gallery: Schema.Attribute.Component<'repertory.gallery-row', true>;
+    hero: Schema.Attribute.Media<'images' | 'videos'>;
     information: Schema.Attribute.Text;
     links: Schema.Attribute.Component<'shared.link', true>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
