@@ -15,6 +15,10 @@
  *      render.
  *   2. A MutationObserver decorates new accordion triggers by index-matching
  *      them to the captured data.
+ * Also hides the `heroDirector` / `heroPhotographer` fields unless the open
+ * repertory has BOTH disciplines (native conditional fields can't key off a
+ * relation) — see toggleConditionalHeroes().
+ *
  * Everything is best-effort: if Strapi's admin DOM changes, decoration
  * silently does nothing.
  */
@@ -23,11 +27,18 @@ const THUMB = 28;
 
 let docData: any = null;
 let scheduled = false;
+/** Discipline names per repertory documentId, captured from the relation input's fetch. */
+const disciplinesByDoc: Record<string, string[]> = {};
 
-const thumbUrl = (media: any): string | null => {
+type Thumb = { kind: 'image' | 'video'; url: string };
+
+const thumbOf = (media: any): Thumb | null => {
   if (!media) return null;
-  if ((media.mime ?? '').startsWith('video/')) return 'video';
-  return media.formats?.thumbnail?.url ?? media.url ?? null;
+  if ((media.mime ?? '').startsWith('video/')) {
+    return media.url ? { kind: 'video', url: media.url } : null;
+  }
+  const url = media.formats?.thumbnail?.url ?? media.url ?? null;
+  return url ? { kind: 'image', url } : null;
 };
 
 /** The accordion-entry container elements (rows/items/slides) inside a list. */
@@ -50,27 +61,59 @@ function fieldNameFor(list: Element | null): string | null {
   return null;
 }
 
-function makeStrip(urls: (string | null)[]): HTMLElement | null {
-  const usable = urls.filter(Boolean).slice(0, 8) as string[];
+function makeStrip(thumbs: (Thumb | null)[]): HTMLElement | null {
+  const usable = thumbs.filter(Boolean).slice(0, 8) as Thumb[];
   if (!usable.length) return null;
   const strip = document.createElement('span');
   strip.setAttribute('data-ws-thumbs', '');
   strip.style.cssText = `display:inline-flex;gap:4px;align-items:center;margin-left:auto;padding:0 12px;flex:none`;
-  for (const u of usable) {
-    if (u === 'video') {
-      const badge = document.createElement('span');
-      badge.textContent = '▶';
-      badge.style.cssText = `width:${THUMB}px;height:${THUMB}px;border-radius:3px;background:#32324d;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:10px;flex:none`;
-      strip.appendChild(badge);
+  const box = `width:${THUMB}px;height:${THUMB}px;object-fit:cover;border-radius:3px;flex:none;background:#32324d`;
+  for (const t of usable) {
+    if (t.kind === 'video') {
+      // Real first-frame preview: #t=0.1 makes metadata preload paint a frame.
+      const video = document.createElement('video');
+      video.src = `${t.url}#t=0.1`;
+      video.muted = true;
+      video.playsInline = true;
+      video.preload = 'metadata';
+      video.style.cssText = box + ';pointer-events:none';
+      strip.appendChild(video);
     } else {
       const img = document.createElement('img');
-      img.src = u;
+      img.src = t.url;
       img.loading = 'lazy';
-      img.style.cssText = `width:${THUMB}px;height:${THUMB}px;object-fit:cover;border-radius:3px;flex:none`;
+      img.style.cssText = box;
       strip.appendChild(img);
     }
   }
   return strip;
+}
+
+/**
+ * The Director/Photographer hero fields only apply to dual-discipline artists —
+ * hide them otherwise. Strapi's native conditional fields can't key off a
+ * relation, so the toggle lives here, fed by the disciplines the relation input
+ * fetches for the open document. Unknown disciplines on an existing entry hide
+ * the fields (they reveal once the data arrives); the create form shows them.
+ */
+function toggleConditionalHeroes() {
+  const m = location.pathname.match(/api::repertory\.repertory\/([^/?]+)/);
+  if (!m) return;
+  const isCreate = m[1] === 'create';
+  const names = disciplinesByDoc[m[1]];
+  const show = isCreate || (!!names && names.includes('Director') && names.includes('Photographer'));
+
+  const labels = [...document.querySelectorAll<HTMLLabelElement>('main label')];
+  for (const field of ['heroDirector', 'heroPhotographer']) {
+    const label = labels.find((l) => (l.textContent ?? '').trim() === field);
+    if (!label) continue;
+    // Field root = the ancestor sitting directly in the edit view's grid layout.
+    let root: HTMLElement | null = label;
+    while (root?.parentElement && getComputedStyle(root.parentElement).display !== 'grid') {
+      root = root.parentElement;
+    }
+    if (root?.parentElement) root.style.display = show ? '' : 'none';
+  }
 }
 
 function decorate() {
@@ -87,10 +130,10 @@ function decorate() {
     if (index < 0) continue;
 
     const field = fieldNameFor(list);
-    let urls: (string | null)[] = [];
+    let thumbs: (Thumb | null)[] = [];
 
     if (field === 'gallery') {
-      urls = (docData.gallery?.[index]?.items ?? []).map((it: any) => thumbUrl(it.image));
+      thumbs = (docData.gallery?.[index]?.items ?? []).map((it: any) => thumbOf(it.image));
     } else if (field === 'items') {
       // Nested gallery item — find which row's entry contains this list. The
       // :not([role="region"]) skips Radix's Accordion.Content (it also carries
@@ -99,15 +142,15 @@ function decorate() {
       const rowList = rowEntry?.parentElement;
       if (rowEntry && rowList && fieldNameFor(rowList) === 'gallery') {
         const rowIndex = entriesOf(rowList).indexOf(rowEntry as Element);
-        urls = [thumbUrl(docData.gallery?.[rowIndex]?.items?.[index]?.image)];
+        thumbs = [thumbOf(docData.gallery?.[rowIndex]?.items?.[index]?.image)];
       }
     } else if (field === 'slides') {
-      urls = [thumbUrl(docData.slides?.[index]?.media)];
+      thumbs = [thumbOf(docData.slides?.[index]?.media)];
     } else {
       continue;
     }
 
-    const strip = makeStrip(urls);
+    const strip = makeStrip(thumbs);
     if (!strip) continue;
     btn.setAttribute('data-ws-thumbed', '1');
     // Insert before the chevron (last child) so the strip right-aligns with it.
@@ -122,6 +165,11 @@ function scheduleDecorate() {
     scheduled = false;
     try {
       decorate();
+    } catch {
+      /* never break the admin */
+    }
+    try {
+      toggleConditionalHeroes();
     } catch {
       /* never break the admin */
     }
@@ -149,6 +197,25 @@ export default {
               // Only a real document (never an action payload) carries a documentId.
               if (json?.data?.documentId) {
                 docData = json.data;
+                scheduleDecorate();
+              }
+            })
+            .catch(() => {});
+        }
+        // Disciplines for the open repertory — the relation input fetches them as
+        // /content-manager/relations/api::repertory.repertory/<docId>/disciplines
+        const rel = url.match(
+          /\/content-manager\/relations\/api::repertory\.repertory\/([^/?]+)\/disciplines/
+        );
+        if (rel && res.ok) {
+          res
+            .clone()
+            .json()
+            .then((json) => {
+              if (Array.isArray(json?.results)) {
+                disciplinesByDoc[rel[1]] = json.results
+                  .map((r: any) => r.name)
+                  .filter(Boolean);
                 scheduleDecorate();
               }
             })
