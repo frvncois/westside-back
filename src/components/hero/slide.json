@@ -16,6 +16,10 @@
         "videos"
       ]
     },
+    "duration": {
+      "type": "decimal",
+      "min": 1
+    },
     "repertory": {
       "type": "relation",
       "relation": "oneToOne",

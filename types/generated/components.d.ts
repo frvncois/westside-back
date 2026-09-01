@@ -8,6 +8,13 @@ export interface HeroSlide extends Struct.ComponentSchema {
     icon: 'picture';
   };
   attributes: {
+    duration: Schema.Attribute.Decimal &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 1;
+        },
+        number
+      >;
     media: Schema.Attribute.Media<'images' | 'videos'>;
     repertory: Schema.Attribute.Relation<
       'oneToOne',

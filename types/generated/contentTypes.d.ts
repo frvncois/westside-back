@@ -679,6 +679,8 @@ export interface ApiRepertoryRepertory extends Struct.CollectionTypeSchema {
     excerpt: Schema.Attribute.Text;
     gallery: Schema.Attribute.Component<'repertory.gallery-row', true>;
     hero: Schema.Attribute.Media<'images' | 'videos'>;
+    heroDirector: Schema.Attribute.Media<'images' | 'videos'>;
+    heroPhotographer: Schema.Attribute.Media<'images' | 'videos'>;
     information: Schema.Attribute.Text;
     links: Schema.Attribute.Component<'shared.link', true>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
