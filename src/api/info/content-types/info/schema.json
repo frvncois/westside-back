@@ -12,6 +12,9 @@
   },
   "pluginOptions": {},
   "attributes": {
+    "introTitle": {
+      "type": "string"
+    },
     "text": {
       "type": "blocks"
     },

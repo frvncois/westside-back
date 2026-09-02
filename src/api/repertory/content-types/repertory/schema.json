@@ -20,6 +20,9 @@
       "type": "uid",
       "targetField": "name"
     },
+    "order": {
+      "type": "integer"
+    },
     "hero": {
       "type": "media",
       "multiple": false,

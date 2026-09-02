@@ -581,6 +581,7 @@ export interface ApiInfoInfo extends Struct.SingleTypeSchema {
       Schema.Attribute.Private;
     image: Schema.Attribute.Media<'images'>;
     intro: Schema.Attribute.Text;
+    introTitle: Schema.Attribute.String;
     links: Schema.Attribute.Component<'shared.link', true>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::info.info'> &
@@ -690,6 +691,7 @@ export interface ApiRepertoryRepertory extends Struct.CollectionTypeSchema {
     > &
       Schema.Attribute.Private;
     name: Schema.Attribute.String & Schema.Attribute.Required;
+    order: Schema.Attribute.Integer;
     publishedAt: Schema.Attribute.DateTime;
     seo: Schema.Attribute.Component<'shared.seo', false>;
     slug: Schema.Attribute.UID<'name'>;
