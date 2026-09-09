@@ -1,6 +1,6 @@
 import type { Core } from '@strapi/strapi';
 import { seedDisciplines, seedRepertory } from './seed/repertory';
-import { seedInfoTeam } from './seed/info';
+import { seedInfoTeam, seedInfoColorSchemes } from './seed/info';
 
 // Fixed gallery taxonomy — seeded on first boot so editors don't have to
 // recreate it by hand. Edit/extend the list in the admin panel afterwards.
@@ -55,5 +55,8 @@ export default {
 
     // Seed the Info page team roster (idempotent by email).
     await seedInfoTeam({ strapi });
+
+    // Seed the Info page colour palettes rotated per load (idempotent — only when empty).
+    await seedInfoColorSchemes({ strapi });
   },
 };

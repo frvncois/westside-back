@@ -44,6 +44,41 @@ const INFO_TEAM: SeedTeamMember[] = [
   },
 ];
 
+/**
+ * Palettes for the Info single type's repeatable `colorSchemes` component
+ * (info.color-scheme: bg / text). The frontend rotates one per page load.
+ *
+ * Seeded only when the list is empty, so it never clobbers editor changes.
+ * These mirror the named --color-info-* design tokens.
+ */
+const INFO_COLOR_SCHEMES: Array<{ bg: string; text: string }> = [
+  { bg: '#560000', text: '#FFFFFF' },
+  { bg: '#6E612E', text: '#FFEB90' },
+  { bg: '#FFDEF7', text: '#560000' },
+  { bg: '#FDFCFC', text: '#1C797C' },
+];
+
+export async function seedInfoColorSchemes({ strapi }: { strapi: Core.Strapi }) {
+  const uid = 'api::info.info' as const;
+
+  const existing = await strapi.documents(uid).findFirst({ populate: { colorSchemes: true } });
+  const current = (existing?.colorSchemes ?? []) as any[];
+  // Only seed when no palettes exist yet — leave any editor-authored list alone.
+  if (current.length > 0) return;
+
+  const doc = existing
+    ? await strapi
+        .documents(uid)
+        .update({ documentId: existing.documentId, data: { colorSchemes: INFO_COLOR_SCHEMES } })
+    : await strapi.documents(uid).create({ data: { colorSchemes: INFO_COLOR_SCHEMES } });
+
+  if (!doc) return;
+
+  // draftAndPublish is on for Info, so publish the change.
+  await strapi.documents(uid).publish({ documentId: doc.documentId });
+  strapi.log.info(`[bootstrap] Info colorSchemes — seeded ${INFO_COLOR_SCHEMES.length} palette(s)`);
+}
+
 export async function seedInfoTeam({ strapi }: { strapi: Core.Strapi }) {
   const uid = 'api::info.info' as const;
 

@@ -1,0 +1,17 @@
+{
+  "collectionName": "components_info_color_schemes",
+  "info": {
+    "displayName": "Color Scheme",
+    "icon": "brush",
+    "description": "A background/text colour pair, rotated one per load on the Info page"
+  },
+  "options": {},
+  "attributes": {
+    "bg": {
+      "type": "string"
+    },
+    "text": {
+      "type": "string"
+    }
+  }
+}

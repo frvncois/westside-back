@@ -36,6 +36,11 @@
       "repeatable": true,
       "component": "shared.link"
     },
+    "colorSchemes": {
+      "type": "component",
+      "repeatable": true,
+      "component": "info.color-scheme"
+    },
     "image": {
       "type": "media",
       "multiple": false,

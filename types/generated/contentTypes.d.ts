@@ -577,6 +577,7 @@ export interface ApiInfoInfo extends Struct.SingleTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
+    colorSchemes: Schema.Attribute.Component<'info.color-scheme', true>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;

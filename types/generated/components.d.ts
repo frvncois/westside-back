@@ -23,6 +23,19 @@ export interface HeroSlide extends Struct.ComponentSchema {
   };
 }
 
+export interface InfoColorScheme extends Struct.ComponentSchema {
+  collectionName: 'components_info_color_schemes';
+  info: {
+    description: 'A background/text colour pair, rotated one per load on the Info page';
+    displayName: 'Color Scheme';
+    icon: 'brush';
+  };
+  attributes: {
+    bg: Schema.Attribute.String;
+    text: Schema.Attribute.String;
+  };
+}
+
 export interface InfoOffice extends Struct.ComponentSchema {
   collectionName: 'components_info_offices';
   info: {
@@ -62,7 +75,9 @@ export interface RepertoryGalleryItem extends Struct.ComponentSchema {
   attributes: {
     client: Schema.Attribute.String;
     filter: Schema.Attribute.Relation<'oneToMany', 'api::category.category'>;
+    hover: Schema.Attribute.Media<'images' | 'videos'>;
     image: Schema.Attribute.Media<'images' | 'videos'>;
+    thumbnail: Schema.Attribute.Media<'images' | 'videos'>;
     title: Schema.Attribute.String;
     type: Schema.Attribute.Enumeration<['films', 'photography']>;
   };
@@ -119,6 +134,7 @@ declare module '@strapi/strapi' {
   export namespace Public {
     export interface ComponentSchemas {
       'hero.slide': HeroSlide;
+      'info.color-scheme': InfoColorScheme;
       'info.office': InfoOffice;
       'info.team-member': InfoTeamMember;
       'repertory.gallery-item': RepertoryGalleryItem;
