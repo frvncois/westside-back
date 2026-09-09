@@ -23,6 +23,12 @@
     "order": {
       "type": "integer"
     },
+    "orderDirector": {
+      "type": "integer"
+    },
+    "orderPhotographer": {
+      "type": "integer"
+    },
     "hero": {
       "type": "media",
       "multiple": false,
