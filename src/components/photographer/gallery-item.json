@@ -1,0 +1,24 @@
+{
+  "collectionName": "components_photographer_gallery_items",
+  "info": {
+    "displayName": "Photographer Gallery Item",
+    "icon": "picture",
+    "description": "A single photography entry with its category taxonomy"
+  },
+  "options": {},
+  "attributes": {
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images", "videos"]
+    },
+    "title": { "type": "string" },
+    "client": { "type": "string" },
+    "filter": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::category.category"
+    }
+  }
+}

@@ -3,7 +3,7 @@
   "info": {
     "displayName": "Slide",
     "icon": "picture",
-    "description": "A hero slide: media paired with a repertory reference"
+    "description": "A hero slide: media paired with the director or photographer it links to"
   },
   "options": {},
   "attributes": {
@@ -20,10 +20,15 @@
       "type": "decimal",
       "min": 1
     },
-    "repertory": {
+    "director": {
       "type": "relation",
       "relation": "oneToOne",
-      "target": "api::repertory.repertory"
+      "target": "api::director.director"
+    },
+    "photographer": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::photographer.photographer"
     }
   }
 }

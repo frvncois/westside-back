@@ -4,7 +4,7 @@
  * Strapi's collapsed repeatable-component entries only show a text label, so
  * galleries and hero slides are unidentifiable without expanding each one.
  * This extension decorates accordion headers with the media they contain:
- *   - repertory `gallery` rows  → a strip of their items' thumbnails
+ *   - director/photographer `gallery` rows → a strip of their items' thumbnails
  *   - gallery items (row open)  → their own image thumbnail
  *   - hero `slides`             → the slide's media thumbnail
  *
@@ -15,9 +15,6 @@
  *      render.
  *   2. A MutationObserver decorates new accordion triggers by index-matching
  *      them to the captured data.
- * Also hides the `heroDirector` / `heroPhotographer` fields unless the open
- * repertory has BOTH disciplines (native conditional fields can't key off a
- * relation) — see toggleConditionalHeroes().
  *
  * Everything is best-effort: if Strapi's admin DOM changes, decoration
  * silently does nothing.
@@ -27,8 +24,6 @@ const THUMB = 28;
 
 let docData: any = null;
 let scheduled = false;
-/** Discipline names per repertory documentId, captured from the relation input's fetch. */
-const disciplinesByDoc: Record<string, string[]> = {};
 
 type Thumb = { kind: 'image' | 'video'; url: string };
 
@@ -89,33 +84,6 @@ function makeStrip(thumbs: (Thumb | null)[]): HTMLElement | null {
   return strip;
 }
 
-/**
- * The Director/Photographer hero fields only apply to dual-discipline artists —
- * hide them otherwise. Strapi's native conditional fields can't key off a
- * relation, so the toggle lives here, fed by the disciplines the relation input
- * fetches for the open document. Unknown disciplines on an existing entry hide
- * the fields (they reveal once the data arrives); the create form shows them.
- */
-function toggleConditionalHeroes() {
-  const m = location.pathname.match(/api::repertory\.repertory\/([^/?]+)/);
-  if (!m) return;
-  const isCreate = m[1] === 'create';
-  const names = disciplinesByDoc[m[1]];
-  const show = isCreate || (!!names && names.includes('Director') && names.includes('Photographer'));
-
-  const labels = [...document.querySelectorAll<HTMLLabelElement>('main label')];
-  for (const field of ['heroDirector', 'heroPhotographer']) {
-    const label = labels.find((l) => (l.textContent ?? '').trim() === field);
-    if (!label) continue;
-    // Field root = the ancestor sitting directly in the edit view's grid layout.
-    let root: HTMLElement | null = label;
-    while (root?.parentElement && getComputedStyle(root.parentElement).display !== 'grid') {
-      root = root.parentElement;
-    }
-    if (root?.parentElement) root.style.display = show ? '' : 'none';
-  }
-}
-
 function decorate() {
   if (!docData) return;
   const triggers = document.querySelectorAll<HTMLButtonElement>(
@@ -168,11 +136,6 @@ function scheduleDecorate() {
     } catch {
       /* never break the admin */
     }
-    try {
-      toggleConditionalHeroes();
-    } catch {
-      /* never break the admin */
-    }
   });
 }
 
@@ -197,25 +160,6 @@ export default {
               // Only a real document (never an action payload) carries a documentId.
               if (json?.data?.documentId) {
                 docData = json.data;
-                scheduleDecorate();
-              }
-            })
-            .catch(() => {});
-        }
-        // Disciplines for the open repertory — the relation input fetches them as
-        // /content-manager/relations/api::repertory.repertory/<docId>/disciplines
-        const rel = url.match(
-          /\/content-manager\/relations\/api::repertory\.repertory\/([^/?]+)\/disciplines/
-        );
-        if (rel && res.ok) {
-          res
-            .clone()
-            .json()
-            .then((json) => {
-              if (Array.isArray(json?.results)) {
-                disciplinesByDoc[rel[1]] = json.results
-                  .map((r: any) => r.name)
-                  .filter(Boolean);
                 scheduleDecorate();
               }
             })

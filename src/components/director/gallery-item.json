@@ -1,0 +1,31 @@
+{
+  "collectionName": "components_director_gallery_items",
+  "info": {
+    "displayName": "Director Gallery Item",
+    "icon": "film",
+    "description": "A single film entry: main media plus the grid's rest/hover pair"
+  },
+  "options": {},
+  "attributes": {
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images", "videos"]
+    },
+    "thumbnail": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images", "videos"]
+    },
+    "hover": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images", "videos"]
+    },
+    "title": { "type": "string" },
+    "client": { "type": "string" }
+  }
+}

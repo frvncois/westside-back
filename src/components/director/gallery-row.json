@@ -1,0 +1,16 @@
+{
+  "collectionName": "components_director_gallery_rows",
+  "info": {
+    "displayName": "Director Gallery Row",
+    "icon": "grid",
+    "description": "A row grouping a set of film gallery items"
+  },
+  "options": {},
+  "attributes": {
+    "items": {
+      "type": "component",
+      "repeatable": true,
+      "component": "director.gallery-item"
+    }
+  }
+}

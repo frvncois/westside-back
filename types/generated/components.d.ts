@@ -1,13 +1,42 @@
 import type { Schema, Struct } from '@strapi/strapi';
 
+export interface DirectorGalleryItem extends Struct.ComponentSchema {
+  collectionName: 'components_director_gallery_items';
+  info: {
+    description: "A single film entry: main media plus the grid's rest/hover pair";
+    displayName: 'Director Gallery Item';
+    icon: 'film';
+  };
+  attributes: {
+    client: Schema.Attribute.String;
+    hover: Schema.Attribute.Media<'images' | 'videos'>;
+    image: Schema.Attribute.Media<'images' | 'videos'>;
+    thumbnail: Schema.Attribute.Media<'images' | 'videos'>;
+    title: Schema.Attribute.String;
+  };
+}
+
+export interface DirectorGalleryRow extends Struct.ComponentSchema {
+  collectionName: 'components_director_gallery_rows';
+  info: {
+    description: 'A row grouping a set of film gallery items';
+    displayName: 'Director Gallery Row';
+    icon: 'grid';
+  };
+  attributes: {
+    items: Schema.Attribute.Component<'director.gallery-item', true>;
+  };
+}
+
 export interface HeroSlide extends Struct.ComponentSchema {
   collectionName: 'components_hero_slides';
   info: {
-    description: 'A hero slide: media paired with a repertory reference';
+    description: 'A hero slide: media paired with the director or photographer it links to';
     displayName: 'Slide';
     icon: 'picture';
   };
   attributes: {
+    director: Schema.Attribute.Relation<'oneToOne', 'api::director.director'>;
     duration: Schema.Attribute.Decimal &
       Schema.Attribute.SetMinMax<
         {
@@ -16,9 +45,9 @@ export interface HeroSlide extends Struct.ComponentSchema {
         number
       >;
     media: Schema.Attribute.Media<'images' | 'videos'>;
-    repertory: Schema.Attribute.Relation<
+    photographer: Schema.Attribute.Relation<
       'oneToOne',
-      'api::repertory.repertory'
+      'api::photographer.photographer'
     >;
   };
 }
@@ -65,33 +94,30 @@ export interface InfoTeamMember extends Struct.ComponentSchema {
   };
 }
 
-export interface RepertoryGalleryItem extends Struct.ComponentSchema {
-  collectionName: 'components_repertory_gallery_items';
+export interface PhotographerGalleryItem extends Struct.ComponentSchema {
+  collectionName: 'components_photographer_gallery_items';
   info: {
-    description: 'A single gallery entry with its taxonomy';
-    displayName: 'Gallery Item';
+    description: 'A single photography entry with its category taxonomy';
+    displayName: 'Photographer Gallery Item';
     icon: 'picture';
   };
   attributes: {
     client: Schema.Attribute.String;
     filter: Schema.Attribute.Relation<'oneToMany', 'api::category.category'>;
-    hover: Schema.Attribute.Media<'images' | 'videos'>;
     image: Schema.Attribute.Media<'images' | 'videos'>;
-    thumbnail: Schema.Attribute.Media<'images' | 'videos'>;
     title: Schema.Attribute.String;
-    type: Schema.Attribute.Enumeration<['films', 'photography']>;
   };
 }
 
-export interface RepertoryGalleryRow extends Struct.ComponentSchema {
-  collectionName: 'components_repertory_gallery_rows';
+export interface PhotographerGalleryRow extends Struct.ComponentSchema {
+  collectionName: 'components_photographer_gallery_rows';
   info: {
-    description: 'A reusable accordion row grouping a set of gallery items';
-    displayName: 'Gallery Row';
+    description: 'A row grouping a set of photography gallery items';
+    displayName: 'Photographer Gallery Row';
     icon: 'grid';
   };
   attributes: {
-    items: Schema.Attribute.Component<'repertory.gallery-item', true>;
+    items: Schema.Attribute.Component<'photographer.gallery-item', true>;
   };
 }
 
@@ -133,12 +159,14 @@ export interface SharedSeo extends Struct.ComponentSchema {
 declare module '@strapi/strapi' {
   export namespace Public {
     export interface ComponentSchemas {
+      'director.gallery-item': DirectorGalleryItem;
+      'director.gallery-row': DirectorGalleryRow;
       'hero.slide': HeroSlide;
       'info.color-scheme': InfoColorScheme;
       'info.office': InfoOffice;
       'info.team-member': InfoTeamMember;
-      'repertory.gallery-item': RepertoryGalleryItem;
-      'repertory.gallery-row': RepertoryGalleryRow;
+      'photographer.gallery-item': PhotographerGalleryItem;
+      'photographer.gallery-row': PhotographerGalleryRow;
       'shared.link': SharedLink;
       'shared.seo': SharedSeo;
     }

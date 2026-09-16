@@ -10,20 +10,10 @@ const config: Core.Config.Middlewares = [
         useDefaults: true,
         directives: {
           'connect-src': ["'self'", 'https:'],
-          'img-src': [
-            "'self'",
-            'data:',
-            'blob:',
-            'market-assets.strapi.io',
-            'reliable-candy-81ca438bc5.media.strapiapp.com',
-          ],
-          'media-src': [
-            "'self'",
-            'data:',
-            'blob:',
-            'market-assets.strapi.io',
-            'reliable-candy-81ca438bc5.media.strapiapp.com',
-          ],
+          // Media is served from this origin now (nginx off public/uploads), so 'self'
+          // covers it — the Strapi Cloud CDN entries went away with the migration.
+          'img-src': ["'self'", 'data:', 'blob:', 'market-assets.strapi.io'],
+          'media-src': ["'self'", 'data:', 'blob:', 'market-assets.strapi.io'],
           upgradeInsecureRequests: null,
         },
       },

@@ -1,5 +1,4 @@
 import type { Core } from '@strapi/strapi';
-import { seedDisciplines, seedRepertory } from './seed/repertory';
 import { seedInfoTeam, seedInfoColorSchemes } from './seed/info';
 
 // Fixed gallery taxonomy — seeded on first boot so editors don't have to
@@ -48,10 +47,6 @@ export default {
       }
       strapi.log.info(`[bootstrap] Seeded ${CATEGORIES.length} categories`);
     }
-
-    // Seed the discipline taxonomy, then the repertory roster (idempotent).
-    const disciplineMap = await seedDisciplines({ strapi });
-    await seedRepertory({ strapi, disciplineMap });
 
     // Seed the Info page team roster (idempotent by email).
     await seedInfoTeam({ strapi });

@@ -1,0 +1,54 @@
+{
+  "kind": "collectionType",
+  "collectionName": "photographers",
+  "info": {
+    "singularName": "photographer",
+    "pluralName": "photographers",
+    "displayName": "Photographer",
+    "description": "Photographers roster"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "name"
+    },
+    "order": {
+      "type": "integer"
+    },
+    "hero": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images", "videos"]
+    },
+    "excerpt": {
+      "type": "text"
+    },
+    "information": {
+      "type": "text"
+    },
+    "links": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.link"
+    },
+    "gallery": {
+      "type": "component",
+      "repeatable": true,
+      "component": "photographer.gallery-row"
+    },
+    "seo": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.seo"
+    }
+  }
+}

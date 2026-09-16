@@ -475,31 +475,37 @@ export interface ApiCategoryCategory extends Struct.CollectionTypeSchema {
   };
 }
 
-export interface ApiDisciplineDiscipline extends Struct.CollectionTypeSchema {
-  collectionName: 'disciplines';
+export interface ApiDirectorDirector extends Struct.CollectionTypeSchema {
+  collectionName: 'directors';
   info: {
-    description: 'Repertory roles (Director, Photographer)';
-    displayName: 'Discipline';
-    pluralName: 'disciplines';
-    singularName: 'discipline';
+    description: 'Film directors roster';
+    displayName: 'Director';
+    pluralName: 'directors';
+    singularName: 'director';
   };
   options: {
-    draftAndPublish: false;
+    draftAndPublish: true;
   };
   attributes: {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    excerpt: Schema.Attribute.Text;
+    gallery: Schema.Attribute.Component<'director.gallery-row', true>;
+    hero: Schema.Attribute.Media<'images' | 'videos'>;
+    information: Schema.Attribute.Text;
+    links: Schema.Attribute.Component<'shared.link', true>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
-      'api::discipline.discipline'
+      'api::director.director'
     > &
       Schema.Attribute.Private;
-    name: Schema.Attribute.String &
-      Schema.Attribute.Required &
-      Schema.Attribute.Unique;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+    order: Schema.Attribute.Integer;
     publishedAt: Schema.Attribute.DateTime;
+    seo: Schema.Attribute.Component<'shared.seo', false>;
+    slug: Schema.Attribute.UID<'name'>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -630,6 +636,44 @@ export interface ApiPageSeoPageSeo extends Struct.SingleTypeSchema {
   };
 }
 
+export interface ApiPhotographerPhotographer
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'photographers';
+  info: {
+    description: 'Photographers roster';
+    displayName: 'Photographer';
+    pluralName: 'photographers';
+    singularName: 'photographer';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    excerpt: Schema.Attribute.Text;
+    gallery: Schema.Attribute.Component<'photographer.gallery-row', true>;
+    hero: Schema.Attribute.Media<'images' | 'videos'>;
+    information: Schema.Attribute.Text;
+    links: Schema.Attribute.Component<'shared.link', true>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::photographer.photographer'
+    > &
+      Schema.Attribute.Private;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+    order: Schema.Attribute.Integer;
+    publishedAt: Schema.Attribute.DateTime;
+    seo: Schema.Attribute.Component<'shared.seo', false>;
+    slug: Schema.Attribute.UID<'name'>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiPolicyPolicy extends Struct.SingleTypeSchema {
   collectionName: 'policies';
   info: {
@@ -654,51 +698,6 @@ export interface ApiPolicyPolicy extends Struct.SingleTypeSchema {
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
     seo: Schema.Attribute.Component<'shared.seo', false>;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-  };
-}
-
-export interface ApiRepertoryRepertory extends Struct.CollectionTypeSchema {
-  collectionName: 'repertories';
-  info: {
-    description: 'Directors and photographers roster';
-    displayName: 'Repertory';
-    pluralName: 'repertories';
-    singularName: 'repertory';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    disciplines: Schema.Attribute.Relation<
-      'manyToMany',
-      'api::discipline.discipline'
-    >;
-    excerpt: Schema.Attribute.Text;
-    gallery: Schema.Attribute.Component<'repertory.gallery-row', true>;
-    hero: Schema.Attribute.Media<'images' | 'videos'>;
-    heroDirector: Schema.Attribute.Media<'images' | 'videos'>;
-    heroPhotographer: Schema.Attribute.Media<'images' | 'videos'>;
-    information: Schema.Attribute.Text;
-    links: Schema.Attribute.Component<'shared.link', true>;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::repertory.repertory'
-    > &
-      Schema.Attribute.Private;
-    name: Schema.Attribute.String & Schema.Attribute.Required;
-    order: Schema.Attribute.Integer;
-    orderDirector: Schema.Attribute.Integer;
-    orderPhotographer: Schema.Attribute.Integer;
-    publishedAt: Schema.Attribute.DateTime;
-    seo: Schema.Attribute.Component<'shared.seo', false>;
-    slug: Schema.Attribute.UID<'name'>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1250,13 +1249,13 @@ declare module '@strapi/strapi' {
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
       'api::category.category': ApiCategoryCategory;
-      'api::discipline.discipline': ApiDisciplineDiscipline;
+      'api::director.director': ApiDirectorDirector;
       'api::footer.footer': ApiFooterFooter;
       'api::hero.hero': ApiHeroHero;
       'api::info.info': ApiInfoInfo;
       'api::page-seo.page-seo': ApiPageSeoPageSeo;
+      'api::photographer.photographer': ApiPhotographerPhotographer;
       'api::policy.policy': ApiPolicyPolicy;
-      'api::repertory.repertory': ApiRepertoryRepertory;
       'api::service.service': ApiServiceService;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
