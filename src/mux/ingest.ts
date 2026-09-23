@@ -147,8 +147,21 @@ export async function findByAssetId(strapi: Core.Strapi, assetId: string): Promi
   return files.find((f) => f.provider_metadata?.muxAssetId === assetId) ?? null;
 }
 
+/**
+ * Mux mirroring is opt-in via MUX_ENABLED. It is off by default: the site streams video from the
+ * original uploads, so pushing new ones to Mux would be paying to encode and store assets nothing
+ * plays. Set MUX_ENABLED=true (and flip the matching switch in the frontend's utils/mux.ts) to
+ * turn the mirror back on.
+ */
+export const muxEnabled = () => process.env.MUX_ENABLED === 'true';
+
 /** Fires on every new upload so videos added from the admin panel reach Mux on their own. */
 export function registerUploadLifecycle(strapi: Core.Strapi) {
+  if (!muxEnabled()) {
+    strapi.log.info('[mux] mirroring disabled (set MUX_ENABLED=true to enable)');
+    return;
+  }
+
   strapi.db.lifecycles.subscribe({
     models: [FILE_UID],
     async afterCreate(event) {
