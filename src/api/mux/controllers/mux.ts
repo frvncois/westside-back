@@ -64,10 +64,15 @@ export default {
       const meta = file.provider_metadata ?? {};
       if (!meta.muxAssetId) tally.unmigrated++;
       else if (meta.muxStatus === 'ready') tally.ready++;
-      else if (meta.muxStatus === 'errored') {
-        tally.errored++;
+      else if (meta.muxStatus === 'errored') tally.errored++;
+      else tally.preparing++;
+
+      /* Reported for anything not ready, keyed off the stored error rather than off having an
+         asset id: an ingest that never got as far as creating an asset still records why, and
+         those were previously invisible here. */
+      if (meta.muxError && meta.muxStatus !== 'ready') {
         problems.push({ name: file.name, status: meta.muxStatus, error: meta.muxError });
-      } else tally.preparing++;
+      }
     }
 
     ctx.body = { configured: muxConfigured(), ...tally, problems };
@@ -89,7 +94,7 @@ export default {
     const batch = pending.slice(0, limit);
 
     const counts = { ingested: 0, failed: 0, skipped: 0 };
-    await pooled(batch, 4, async (file) => {
+    await pooled(batch, 2, async (file) => {
       const result = await ingestFile(strapi, file);
       counts[result]++;
     });
@@ -112,7 +117,7 @@ export default {
     );
 
     const counts: Record<string, number> = {};
-    await pooled(stale, 4, async (file) => {
+    await pooled(stale, 2, async (file) => {
       const status = (await reconcileFile(strapi, file)) ?? 'cleared';
       counts[status] = (counts[status] ?? 0) + 1;
     });
