@@ -1,5 +1,6 @@
 import type { Core } from '@strapi/strapi';
 import { seedInfoTeam, seedInfoColorSchemes } from './seed/info';
+import { registerUploadLifecycle } from './mux/ingest';
 
 // Fixed gallery taxonomy — seeded on first boot so editors don't have to
 // recreate it by hand. Edit/extend the list in the admin panel afterwards.
@@ -53,5 +54,8 @@ export default {
 
     // Seed the Info page colour palettes rotated per load (idempotent — only when empty).
     await seedInfoColorSchemes({ strapi });
+
+    // Mirror every newly uploaded video to Mux, which is what the frontend streams from.
+    registerUploadLifecycle(strapi);
   },
 };
