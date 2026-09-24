@@ -26,6 +26,11 @@
       "allowedTypes": ["images", "videos"]
     },
     "title": { "type": "string" },
-    "client": { "type": "string" }
+    "client": { "type": "string" },
+    "filter": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::category.category"
+    }
   }
 }
