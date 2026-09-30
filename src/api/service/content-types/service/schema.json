@@ -16,6 +16,9 @@
       "type": "string",
       "required": true
     },
+    "order": {
+      "type": "integer"
+    },
     "subtitle": {
       "type": "string"
     },

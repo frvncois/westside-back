@@ -21,6 +21,11 @@
     "intro": {
       "type": "text"
     },
+    "idleScreenDelay": {
+      "type": "integer",
+      "default": 40,
+      "min": 1
+    },
     "office": {
       "type": "component",
       "repeatable": false,
