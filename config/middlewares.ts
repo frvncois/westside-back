@@ -27,6 +27,8 @@ const config: Core.Config.Middlewares = [
         'http://localhost:5173',
         'http://localhost:5174',
         'https://westside-front.vercel.app',
+        'https://westsidestudio.com',
+        'https://www.westsidestudio.com',
       ],
     },
   },
